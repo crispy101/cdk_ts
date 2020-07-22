@@ -7,6 +7,8 @@ import * as ssm from '@aws-cdk/aws-ssm';
 
 
 export class SecurityStack extends cdk.Stack {
+  readonly bastion_sg: ec2.SecurityGroup
+
   constructor(scope: cdk.Construct, id: string, vpc: ec2.Vpc, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -20,14 +22,14 @@ export class SecurityStack extends cdk.Stack {
         allowAllOutbound: true
     })
 
-    const bastion_sg = new ec2.SecurityGroup(this, 'bastion_sg', {
+    this.bastion_sg = new ec2.SecurityGroup(this, 'bastion_sg', {
         vpc: vpc,
         securityGroupName: 'bastion_sg',
         description: "SG for Bastion Host",
         allowAllOutbound: true
     })
 
-    bastion_sg.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(22), "SSH Access")
+    this.bastion_sg.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(22), "SSH Access")
 
     const lambda_role = new iam.Role(this, 'lambda_role', {
         assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
