@@ -1,6 +1,5 @@
 import * as cdk from '@aws-cdk/core';
 import * as ec2 from '@aws-cdk/aws-ec2';
-import * as iam from '@aws-cdk/aws-iam';
 import { Subnet, SubnetType } from '@aws-cdk/aws-ec2';
 
 
@@ -21,6 +20,27 @@ export class BastionStack extends cdk.Stack {
           'echo "exit command" > exit.txt'
       )
       
+    // How to define a generic ec2 instance for a bastion host that enables key-based ssh access
+    // 
+    //   const bastion_host = new ec2.Instance(this, 'bastion_host', {
+    //     vpc: vpc,
+    //     instanceType: new ec2.InstanceType('t3.nano'),
+    //     machineImage: new ec2.AmazonLinuxImage({
+    //         edition: ec2.AmazonLinuxEdition.STANDARD,
+    //         generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2,
+    //         storage: ec2.AmazonLinuxStorage.GENERAL_PURPOSE,
+    //         virtualization: ec2.AmazonLinuxVirt.HVM,
+    //         userData: userData,
+    //     }),
+    //     keyName: 'udemycdk_key',
+    //     securityGroup: sg,
+    //     vpcSubnets: { subnetType: SubnetType.PUBLIC }
+    //     })
+
+    // How to define a bastion host using ec2.BastionHostLinux class that enables SSM Session-based connection, 
+    // i.e. not supporting ssh-key based access. 
+    // Therefore, no need to have it in a public subnet.
+    
       const bastion_host = new ec2.BastionHostLinux(this, 'bastion_host', {
           vpc: vpc,
           instanceType: new ec2.InstanceType('t3.nano'),
@@ -31,8 +51,7 @@ export class BastionStack extends cdk.Stack {
               virtualization: ec2.AmazonLinuxVirt.HVM,
               userData: userData,
           }),
-          securityGroup: sg,
-          subnetSelection: { subnetType: SubnetType.PUBLIC }
+          securityGroup: sg
           })
     }
 }
