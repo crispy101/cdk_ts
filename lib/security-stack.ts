@@ -8,6 +8,7 @@ import * as ssm from '@aws-cdk/aws-ssm';
 
 export class SecurityStack extends cdk.Stack {
   readonly bastion_sg: ec2.SecurityGroup
+  readonly lambda_sg: ec2.SecurityGroup
 
   constructor(scope: cdk.Construct, id: string, vpc: ec2.Vpc, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -15,7 +16,7 @@ export class SecurityStack extends cdk.Stack {
     const pjt_name = this.node.tryGetContext('project_name');
     const env_name = this.node.tryGetContext('env')
 
-    const lambda_sg = new ec2.SecurityGroup(this, 'lambda_sg', {
+    this.lambda_sg = new ec2.SecurityGroup(this, 'lambda_sg', {
         vpc: vpc,
         securityGroupName: 'lambda_sg',
         description: "SG for Lambda Functions",
@@ -50,7 +51,7 @@ export class SecurityStack extends cdk.Stack {
 
     new ssm.StringParameter(this, 'lambdasg-param', {
         parameterName: '/'+env_name+'/lambda-sg',
-        stringValue: lambda_sg.securityGroupId
+        stringValue: this.lambda_sg.securityGroupId
     })
 
     new ssm.StringParameter(this, 'lambdarole-param', {
