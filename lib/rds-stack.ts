@@ -4,8 +4,6 @@ import * as ssm from '@aws-cdk/aws-ssm';
 import * as kms from '@aws-cdk/aws-kms';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as sm from '@aws-cdk/aws-secretsmanager';
-// import { AuroraEngineVersion, AuroraMysqlEngineVersion, MysqlEngineVersion, DatabaseClusterEngine } from '@aws-cdk/aws-rds';
-// import { version } from 'process';
 import { SubnetType } from '@aws-cdk/aws-ec2';
 import { RemovalPolicy } from '@aws-cdk/core';
 
@@ -14,21 +12,22 @@ export class RDSStack extends cdk.Stack {
         lambdasg: ec2.SecurityGroup, bastionsg: ec2.SecurityGroup, kmskey: kms.Key,
         props?: cdk.StackProps) {
 
-      super(scope, id, props);
-  
-      const pjt_name = this.node.tryGetContext('project_name');
-      const env_name = this.node.tryGetContext('env')
-
-      const db_cres = new sm.Secret(this, 'db-secret', {
-          secretName: env_name+'/rds-secret',
-          generateSecretString: {
-              includeSpace: false,
-              passwordLength: 12,
-              generateStringKey: 'rds-password',
-              excludePunctuation: true,
-              secretStringTemplate: '{"username": "admin"}'
-          }
-      })
+        super(scope, id, props);
+    
+        const pjt_name = this.node.tryGetContext('project_name');
+        const env_name = this.node.tryGetContext('env')
+        
+        const json_template = '{"username": "admin"}'
+        const db_cres = new sm.Secret(this, 'db-secret', {
+            secretName: env_name+'/rds-secret',
+            generateSecretString: {
+                includeSpace: false,
+                passwordLength: 12,
+                generateStringKey: 'rds-password',
+                excludePunctuation: true,
+                secretStringTemplate: json_template
+            }
+        })
 
       const db_mysql = new rds.DatabaseCluster(this, 'mysql', {
           defaultDatabaseName: pjt_name+env_name,
