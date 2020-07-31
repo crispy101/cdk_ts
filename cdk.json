@@ -3,7 +3,7 @@
   "context": {
     "@aws-cdk/core:enableStackNameDuplicates": "true",
     "aws-cdk:enableDiffNoFail": "true",
-    "project_name": "cdk_ts",
+    "project_name": "cdkts",
     "env": "dev"
   }
 }
