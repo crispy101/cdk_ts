@@ -14,7 +14,8 @@ export class KMSStack extends cdk.Stack {
   
         this.kms_rds = new kms.Key(this, 'rdskey', {
             description: pjt_name+"-key-rds",
-            enableKeyRotation: true
+            enableKeyRotation: true, 
+            removalPolicy: cdk.RemovalPolicy.DESTROY
         })
 
         this.kms_rds.addAlias('alias/'+pjt_name+'-key-rds')

@@ -9,6 +9,8 @@ import { S3Stack } from '../lib/s3-stack';
 import { RDSStack } from '../lib/rds-stack';
 import { RedisStack } from '../lib/redis-stack';
 import { CognitoStack } from '../lib/cognito-stack';
+import { APIStack } from '../lib/apigw-stack';
+import { LambdaStack } from '../lib/lambda-stack';
 
 const prod = { account: '528928441350', region: 'us-east-1' };
 
@@ -21,5 +23,7 @@ const s3 = new S3Stack(cdk_ts, 'S3StackTS')
 const rds = new RDSStack(cdk_ts, 'RDSStackTS', vpc.vpc, sg.lambda_sg, sg.bastion_sg, kms.kms_rds)
 const redis = new RedisStack(cdk_ts, 'RedisStackTS', vpc.vpc, sg.redis_sg)
 const cognito = new CognitoStack(cdk_ts, 'CognitoStackTS')
+const apigw = new APIStack(cdk_ts, 'APIStackTS')
+const lambda = new LambdaStack(cdk_ts, 'LambdaStackTS')
 
 cdk_ts.synth();
