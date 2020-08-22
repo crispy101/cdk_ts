@@ -11,6 +11,7 @@ import { RedisStack } from '../lib/redis-stack';
 import { CognitoStack } from '../lib/cognito-stack';
 import { APIStack } from '../lib/apigw-stack';
 import { LambdaStack } from '../lib/lambda-stack';
+import { CodePipelineStack } from '../lib/codepipeline-backend-stack';
 
 const prod = { account: '528928441350', region: 'us-east-1' };
 
@@ -25,5 +26,7 @@ const redis = new RedisStack(cdk_ts, 'RedisStackTS', vpc.vpc, sg.redis_sg)
 const cognito = new CognitoStack(cdk_ts, 'CognitoStackTS')
 const apigw = new APIStack(cdk_ts, 'APIStackTS')
 const lambda = new LambdaStack(cdk_ts, 'LambdaStackTS')
+const codepipeline = new CodePipelineStack(cdk_ts, 'CodePipelineStackTS', s3.artifactbucket)
+codepipeline.addDependency(sg, 'roles used by the code')
 
 cdk_ts.synth();
