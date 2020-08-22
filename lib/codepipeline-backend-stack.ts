@@ -3,11 +3,8 @@ import * as cp from '@aws-cdk/aws-codepipeline';
 import * as cp_actions from '@aws-cdk/aws-codepipeline-actions';
 import * as cb from '@aws-cdk/aws-codebuild';
 import * as s3 from '@aws-cdk/aws-s3';
-import * as sm from '@aws-cdk/aws-secretsmanager';
 import * as iam from '@aws-cdk/aws-iam';
 import * as ssm from '@aws-cdk/aws-ssm';
-import { OAuthScope } from '@aws-cdk/aws-cognito';
-
 
 export class CodePipelineStack extends cdk.Stack {
 
@@ -81,6 +78,7 @@ export class CodePipelineStack extends cdk.Stack {
                 oauthToken: github_token,
                 output: source_output, 
                 owner: 'crispy101',
+                branch: 'master',
                 repo: 'udemycdk',
                 actionName: 'GithubSource'
             })]

@@ -12,6 +12,7 @@ import { CognitoStack } from '../lib/cognito-stack';
 import { APIStack } from '../lib/apigw-stack';
 import { LambdaStack } from '../lib/lambda-stack';
 import { CodePipelineStack } from '../lib/codepipeline-backend-stack';
+import { NotificationStack } from '../lib/notifications-stack';
 
 const prod = { account: '528928441350', region: 'us-east-1' };
 
@@ -28,5 +29,6 @@ const apigw = new APIStack(cdk_ts, 'APIStackTS')
 const lambda = new LambdaStack(cdk_ts, 'LambdaStackTS')
 const codepipeline = new CodePipelineStack(cdk_ts, 'CodePipelineStackTS', s3.artifactbucket)
 codepipeline.addDependency(sg, 'roles used by the code')
+const notifications = new NotificationStack(cdk_ts, 'NotificationStackTS')
 
 cdk_ts.synth();
