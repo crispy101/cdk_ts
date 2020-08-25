@@ -15,9 +15,6 @@ export class CodePipelineStack extends cdk.Stack {
         const pjt_name = this.node.tryGetContext('project_name');
         const env_name = this.node.tryGetContext('env')
 
-        // Let's try to directly reference a bucket object vs the bucket name
-        // const artifact_bucket = s3.Bucket.fromBucketName(this, 'artifactbucket', artifactbucket)
-
         const github_token = cdk.SecretValue.secretsManager(
             env_name+'/github-token', {jsonField: 'github-token'}
         )
