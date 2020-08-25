@@ -13,6 +13,7 @@ import { APIStack } from '../lib/apigw-stack';
 import { LambdaStack } from '../lib/lambda-stack';
 import { CodePipelineStack } from '../lib/codepipeline-backend-stack';
 import { NotificationStack } from '../lib/notifications-stack';
+import { CdnStack } from '../lib/cdn-stack';
 
 const prod = { account: '528928441350', region: 'us-east-1' };
 
@@ -30,5 +31,7 @@ const lambda = new LambdaStack(cdk_ts, 'LambdaStackTS')
 const codepipeline = new CodePipelineStack(cdk_ts, 'CodePipelineStackTS', s3.artifactbucket)
 codepipeline.addDependency(sg, 'roles used by the code')
 const notifications = new NotificationStack(cdk_ts, 'NotificationStackTS')
+const cdn = new CdnStack(cdk_ts, 'CdnStackTS', s3.frontendbucket, s3.oai)
+cdn.addDependency(s3, 'for CDN origin')
 
 cdk_ts.synth();
