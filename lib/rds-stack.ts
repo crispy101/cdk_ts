@@ -37,10 +37,10 @@ export class RDSStack extends cdk.Stack {
               instanceType: new ec2.InstanceType('t3.small'),
               vpcSubnets: { subnetType: SubnetType.ISOLATED }
           },
-          masterUser: {
-              username:'admin',
-              password: db_cres.secretValueFromJson('rds-password')
-            },
+        //   masterUser: {
+        //       username:'admin',
+        //       password: db_cres.secretValueFromJson('rds-password')
+        //     },
           instances: 1,
           parameterGroup: rds.ParameterGroup.fromParameterGroupName(
               this, 'pg-dev','default.aurora-mysql5.7'
