@@ -5,17 +5,18 @@ import * as ssm from '@aws-cdk/aws-ssm'
 
 
 export class CdnStack extends cdk.Stack {
+    readonly distibution: cdn.CloudFrontWebDistribution
 
     constructor(scope: cdk.Construct, id: string, 
         frontendbucket: s3.Bucket, oai: cdn.OriginAccessIdentity, props?: cdk.StackProps) {
         // OAI needs to be created with the s3 bucket. Unless, it will cause a cyclinc reference error.
 
         super(scope, id, props);
-    
+        
         const pjt_name = this.node.tryGetContext('project_name');
         const env_name = this.node.tryGetContext('env')
 
-        const distibution = new cdn.CloudFrontWebDistribution(this, 'webhosting-cdn', {
+        this.distibution = new cdn.CloudFrontWebDistribution(this, 'webhosting-cdn', {
             originConfigs: [{
                     s3OriginSource: {
                         s3BucketSource: frontendbucket, 
@@ -45,11 +46,11 @@ export class CdnStack extends cdk.Stack {
 
         new ssm.StringParameter(this, 'cdn-dist-id', {
             parameterName: '/'+env_name+'/app-distribution-id',
-            stringValue: distibution.distributionId
+            stringValue: this.distibution.distributionId
         })
         new ssm.StringParameter(this, 'cdn-url', {
             parameterName: '/'+env_name+'/app-cdn-url',
-            stringValue: distibution.domainName
+            stringValue: this.distibution.domainName
         })
     }
 }

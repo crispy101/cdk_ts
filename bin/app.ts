@@ -12,6 +12,7 @@ import { CognitoStack } from '../lib/cognito-stack';
 import { APIStack } from '../lib/apigw-stack';
 import { LambdaStack } from '../lib/lambda-stack';
 import { CodePipelineStack } from '../lib/codepipeline-backend-stack';
+import { CodePipelineFEStack } from '../lib/codepipeline-frontend-stack';
 import { NotificationStack } from '../lib/notifications-stack';
 import { CdnStack } from '../lib/cdn-stack';
 
@@ -28,10 +29,12 @@ const redis = new RedisStack(cdk_ts, 'RedisStackTS', vpc.vpc, sg.redis_sg)
 const cognito = new CognitoStack(cdk_ts, 'CognitoStackTS')
 const apigw = new APIStack(cdk_ts, 'APIStackTS')
 const lambda = new LambdaStack(cdk_ts, 'LambdaStackTS')
-const codepipeline = new CodePipelineStack(cdk_ts, 'CodePipelineStackTS', s3.artifactbucket)
+const codepipeline = new CodePipelineStack(cdk_ts, 'CodePipelineBEStackTS', s3.artifactbucket)
 codepipeline.addDependency(sg, 'roles used by the code')
 const notifications = new NotificationStack(cdk_ts, 'NotificationStackTS')
 const cdn = new CdnStack(cdk_ts, 'CdnStackTS', s3.frontendbucket, s3.oai)
 cdn.addDependency(s3, 'for CDN origin')
+const codepipelinefrontend = new CodePipelineFEStack(cdk_ts, 'CodePipelineFEStackTS', s3.frontendbucket, cdn.distibution)
+//codepipelinefrontend.addDependency(sg, 'roles used by the code')
 
 cdk_ts.synth();
