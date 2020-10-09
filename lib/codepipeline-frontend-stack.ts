@@ -5,10 +5,7 @@ import * as cb from '@aws-cdk/aws-codebuild';
 import * as ccm from '@aws-cdk/aws-codecommit';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as iam from '@aws-cdk/aws-iam';
-import * as ssm from '@aws-cdk/aws-ssm';
 import * as cdn from '@aws-cdk/aws-cloudfront';
-import { StringParameter } from '@aws-cdk/aws-ssm';
-import { countReset } from 'console';
 
 export class CodePipelineFEStack extends cdk.Stack {
 

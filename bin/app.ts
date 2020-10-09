@@ -15,8 +15,9 @@ import { CodePipelineStack } from '../lib/codepipeline-backend-stack';
 import { CodePipelineFEStack } from '../lib/codepipeline-frontend-stack';
 import { NotificationStack } from '../lib/notifications-stack';
 import { CdnStack } from '../lib/cdn-stack';
+import { WafStack } from '../lib/waf-stack';
 
-const prod = { account: '528928441350', region: 'us-east-1' };
+const global = { region: 'us-east-1' };
 
 const cdk_ts = new cdk.App();
 const vpc = new VPCStack(cdk_ts, 'VPCStackTS');
@@ -35,6 +36,6 @@ const notifications = new NotificationStack(cdk_ts, 'NotificationStackTS')
 const cdn = new CdnStack(cdk_ts, 'CdnStackTS', s3.frontendbucket, s3.oai)
 cdn.addDependency(s3, 'for CDN origin')
 const codepipelinefrontend = new CodePipelineFEStack(cdk_ts, 'CodePipelineFEStackTS', s3.frontendbucket, cdn.distibution)
-//codepipelinefrontend.addDependency(sg, 'roles used by the code')
+const waf = new WafStack(cdk_ts, 'WafStackTS', {env: global})
 
 cdk_ts.synth();
