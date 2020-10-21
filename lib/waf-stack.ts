@@ -1,6 +1,5 @@
 import * as cdk from '@aws-cdk/core';
 import * as wafv2 from '@aws-cdk/aws-wafv2';
-import * as ssm from '@aws-cdk/aws-ssm'
 
 
 export class WafStack extends cdk.Stack {
@@ -29,7 +28,7 @@ export class WafStack extends cdk.Stack {
                     }
                 }
 
-        const web_acl = new wafv2.CfnWebACL(this, 'WebACL', {
+        const web_acl = new wafv2.CfnWebACL(this, 'WebACL-TS', {
             defaultAction: {
                 allow: {}
             },

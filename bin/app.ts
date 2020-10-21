@@ -16,6 +16,7 @@ import { CodePipelineFEStack } from '../lib/codepipeline-frontend-stack';
 import { NotificationStack } from '../lib/notifications-stack';
 import { CdnStack } from '../lib/cdn-stack';
 import { WafStack } from '../lib/waf-stack';
+import { DnsStack } from '../lib/route53-stack';
 
 const global = { region: 'us-east-1' };
 
@@ -37,5 +38,6 @@ const cdn = new CdnStack(cdk_ts, 'CdnStackTS', s3.frontendbucket, s3.oai)
 cdn.addDependency(s3, 'for CDN origin')
 const codepipelinefrontend = new CodePipelineFEStack(cdk_ts, 'CodePipelineFEStackTS', s3.frontendbucket, cdn.distibution)
 const waf = new WafStack(cdk_ts, 'WafStackTS', {env: global})
+const dns = new DnsStack(cdk_ts, 'DnsStackTS', {terminationProtection: true})
 
 cdk_ts.synth();
