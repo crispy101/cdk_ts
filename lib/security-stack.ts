@@ -10,6 +10,7 @@ export class SecurityStack extends cdk.Stack {
   readonly bastion_sg: ec2.SecurityGroup
   readonly lambda_sg: ec2.SecurityGroup
   readonly redis_sg: ec2.SecurityGroup
+  readonly kibana_sg: ec2.SecurityGroup
 
 
   constructor(scope: cdk.Construct, id: string, vpc: ec2.Vpc, props?: cdk.StackProps) {
@@ -60,6 +61,19 @@ export class SecurityStack extends cdk.Stack {
             }
         )
     )
+
+    this.kibana_sg = new ec2.SecurityGroup(this, 'kibana_sg', {
+        vpc: vpc,
+        securityGroupName: 'kibana_sg',
+        description: "SG for Kibana Access",
+        allowAllOutbound: true
+    })
+
+    this.kibana_sg.addIngressRule(this.bastion_sg, ec2.Port.tcp(443), "Access from jumpbox")
+
+    const kibana_role = new iam.CfnServiceLinkedRole(this, 'kibanarole', {
+        awsServiceName: 'es.amazonaws.com'
+    })
 
     new ssm.StringParameter(this, 'lambdasg-param', {
         parameterName: '/'+env_name+'/lambda-sg',
