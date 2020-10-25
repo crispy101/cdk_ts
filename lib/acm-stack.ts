@@ -1,7 +1,6 @@
 import * as cdk from '@aws-cdk/core';
 import * as r53 from '@aws-cdk/aws-route53';
 import * as acm from '@aws-cdk/aws-certificatemanager'
-import { Method } from '@aws-cdk/aws-apigateway';
 
 export class AcmStack extends cdk.Stack {
     readonly SSLCert: acm.Certificate

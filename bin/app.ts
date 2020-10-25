@@ -19,6 +19,7 @@ import { WafStack } from '../lib/waf-stack';
 import { DnsStack } from '../lib/route53-stack';
 import { AcmStack } from '../lib/acm-stack';
 import { KibanaStack } from '../lib/kibana-stack';
+import { EcsStack } from '../lib/ecs-stack';
 
 const global = { region: 'us-east-1' };
 
@@ -45,4 +46,6 @@ const cdn = new CdnStack(cdk_ts, 'CdnStackTS', s3.frontendbucket, s3.oai, dns.ho
 // cdn.addDependency(s3, 'for CDN origin')
 const codepipelinefrontend = new CodePipelineFEStack(cdk_ts, 'CodePipelineFEStackTS', s3.frontendbucket, cdn.distibution)
 const kibana = new KibanaStack(cdk_ts, 'KibanaStackTS', vpc.vpc, sg.kibana_sg)
+const ecs = new EcsStack(cdk_ts, 'ECSStackTS', vpc.vpc)
+
 cdk_ts.synth();
