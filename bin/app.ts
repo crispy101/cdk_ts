@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
 import { VPCStack } from '../lib/vpc-stack';
@@ -21,6 +22,9 @@ import { AcmStack } from '../lib/acm-stack';
 import { KibanaStack } from '../lib/kibana-stack';
 import { EcsStack } from '../lib/ecs-stack';
 
+// Parameters managed as a seperate file
+import { production } from '../lib/parameters/production';
+
 const global = { region: 'us-east-1' };
 
 const cdk_ts = new cdk.App();
@@ -37,7 +41,11 @@ const lambda = new LambdaStack(cdk_ts, 'LambdaStackTS')
 const codepipeline = new CodePipelineStack(cdk_ts, 'CodePipelineBEStackTS', s3.artifactbucket)
 codepipeline.addDependency(sg, 'roles used by the code')
 const notifications = new NotificationStack(cdk_ts, 'NotificationStackTS')
-const waf = new WafStack(cdk_ts, 'WafStackTS')
+
+// const waf = new WafStack(cdk_ts, 'WafStackTS')
+new WafStack(cdk_ts, 'WafStackTSProd', production)
+// new WafStack(cdk_ts, 'WafStackTSPreprod', preproduction)
+
 const dns = new DnsStack(cdk_ts, 'DnsStackTS', {
     terminationProtection: true
 })
